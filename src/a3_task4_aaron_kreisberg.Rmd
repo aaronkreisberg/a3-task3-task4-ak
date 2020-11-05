@@ -1,0 +1,73 @@
+---
+title: "a3_task4_aaron_kreisberg"
+author: "Aaron Kreisberg"
+date: "11/4/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE, message=FALSE, warning=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(janitor)
+library(here)
+library(kableExtra)
+library(lubridate)
+```
+
+```{r}
+urchins <- read.csv(here("data", "urchins.csv")) %>% 
+  clean_names()
+```
+
+The urchins data will be wrangled to compare the mean size of purple urchins in CONTROL or ANNUAL sections of Naples Reef in January 2010.
+
+## Data Wrangling
+
+First some basic data wrangling will be performed so the urchins data matches the above mentioned parameters. The
+
+```{r}
+jan_2010_naples_urchins <- urchins %>%
+  mutate(date_new = mdy(date)) %>% 
+  mutate(year = year(date_new)) %>% 
+  mutate(month = month(date_new)) %>% 
+  filter(month == 01, year == 2010) %>% 
+  filter(common_name == "Purple Urchin", site == "NAPL") %>%
+  mutate(site_full = case_when(
+  site == "NAPL" ~ "Naples Reef"))
+```
+
+```{r}
+ggplot(data = jan_2010_naples_urchins, aes(x = size)) +
+  geom_histogram() +
+  facet_wrap(~treatment)
+```
+
+```{r}
+ggplot(data = jan_2010_naples_urchins, aes(sample = size)) +
+  geom_qq() +
+  facet_wrap(~treatment)
+```
+
+```{r}
+jan_2010_naples_urchins %>%
+  group_by(treatment) %>% 
+  summarise(mean_size = mean(size),
+            median_size = median(size),
+            sd_size = sd(size), 
+            n = n()) %>% 
+  kbl() %>% 
+  kable_classic(full_width = TRUE)
+```
+
+```{r}
+annual_sample <- jan_2010_naples_urchins %>% 
+  filter(treatment == "ANNUAL") %>% 
+  pull(size)
+
+control_sample <- jan_2010_naples_urchins %>% 
+  filter(treatment == "CONTROL") %>% 
+  pull(size)
+
+t.test(x = annual_sample, control_sample)
+```
+

@@ -27,13 +27,17 @@ First the distribution of sizes of purple and red urchins will be examined visua
 
 ```{r}
 ggplot(data = urchins, aes(x = size, fill = common_name)) +
-  geom_histogram() +
+  geom_histogram(color = "black") +
   facet_wrap(~common_name) +
-  labs(x = "Urchin Size (nearest 0.5 cm)", y = "# of Urchins")
+  scale_fill_manual(values = c("purple", "red")) +
+  theme(legend.position = "none") +
+  labs(x = "Urchin Size (diameter to the nearest 0.5 cm)", y = "# of Urchins")
 ```
 ```{r}
 ggplot(data = urchins, aes(x = common_name, y = size, fill = common_name)) +
   geom_boxplot() +
+  scale_fill_manual(values = c("purple", "red")) +
+  theme(legend.position = "none") +
   labs(x = "Urchins", y ="Urchin Size (nearest 0.5 cm)")
  
   
@@ -81,9 +85,8 @@ purple_urchin_site_year
 
 ```{r}
 ggplot(data = purple_urchin_site_year, aes(x = year, y = n, color = site_full)) +
-  scale_x_continuous(breaks = seq(2008, 2020, 2)) +
-  geom_line() +
-  geom_point()
+  geom_col() +
+  facet_wrap(~site_full)
    
 ```
 
