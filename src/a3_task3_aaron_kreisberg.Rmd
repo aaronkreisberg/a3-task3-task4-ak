@@ -27,7 +27,7 @@ First the distribution of sizes of purple and red urchins will be examined visua
 
 ```{r}
 ggplot(data = urchins, aes(x = size, fill = common_name)) +
-    geom_histogram() +
+  geom_histogram() +
   facet_wrap(~common_name) +
   labs(x = "Urchin Size (nearest 0.5 cm)", y = "# of Urchins")
 ```
@@ -80,8 +80,10 @@ purple_urchin_site_year
 ```
 
 ```{r}
-ggplot(data = purple_urchin_site_year, aes(x = year, y = n, group = site_full, color = site_full)) +
+ggplot(data = purple_urchin_site_year, aes(x = year, y = n, color = site_full)) +
+  scale_x_continuous(breaks = seq(2008, 2020, 2)) +
   geom_line() +
   geom_point()
+   
 ```
 
