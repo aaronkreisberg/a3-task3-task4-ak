@@ -84,7 +84,8 @@ purple_urchin_site_year
 ```
 
 ```{r}
-ggplot(data = purple_urchin_site_year, aes(x = year, y = n, color = site_full)) +
+ggplot(data = purple_urchin_site_year, aes(x = year, y = n)) +
+  scale_fill_manual(values = c("purple", "red", "green", "blue", "black")) +
   geom_col() +
   facet_wrap(~site_full)
    
